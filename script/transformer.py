@@ -44,7 +44,7 @@ df = spark.read \
 
 
 
-# data transformations
+# DATA TRANSFORMATIONS
 
 # Mapping manually every months to fix abbreviation
 months = {
@@ -106,6 +106,8 @@ df = df.withColumn(
 
 
 
+# EXPORTING TO GOOGLE CLOUD
+
 # renames the file accordingly
 file_name2 = file_name.split("/")[-1].replace(".csv", "")
 # saves the dataframe as csv in a separate folder called temp_data in the bucket
@@ -115,10 +117,8 @@ file_name2 = file_name.split("/")[-1].replace(".csv", "")
     .csv(f"gs://phivolcs_earthquake_data/temp_data/{file_name2}")"""
 
 
-
-
 # save the dataframe as a table in big query, it uses a bucket to stage the file before creating the "temp_table" in big query
-# create or replace existing temp_table
+# this also create or replace existing temp_table
 df.write \
     .format("bigquery") \
     .mode("overwrite") \

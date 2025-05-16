@@ -64,14 +64,6 @@ if soup:
 
         earthquake_data.append([date_time, latitude, longitude, depth, magnitude, relative_location])
 
-# save the list of scraped data as csv, for later data cleaning/transformation
-
-"""with open(f'../output/{year}_{month}_{day}_earthquake_data.csv', 'w', newline='', encoding='utf-8') as f:
-    writer = csv.writer(f)
-    # Optional: write a header
-    writer.writerow(['datetime', 'latitude', 'longitude', 'depth_km', 'magnitude', 'relative_location']) # ensures that the list of list (earthquake_data) is saved seamlessly as csv
-    writer.writerows(earthquake_data)"""
-
 
 
 
