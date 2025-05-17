@@ -2,8 +2,6 @@
 # coding: utf-8
 
 
-import os
-import pyspark
 from pyspark.sql import SparkSession
 from google.cloud import storage
 from pyspark.sql.functions import regexp_replace, regexp_extract, col, when, to_timestamp
