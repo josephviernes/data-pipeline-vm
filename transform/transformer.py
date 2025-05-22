@@ -10,7 +10,7 @@ from pyspark.sql.functions import regexp_replace, regexp_extract, col, when, to_
 # filter the gcs bucket folder for the latest earthquake data file
 
 # Initialize GCS client
-storage_client = storage.Client.from_service_account_json("/home/joseph/Documents/dez_final_project/gsa/finalproject-456408-a18af71e91f6.json")
+storage_client = storage.Client()
 bucket = storage_client.bucket("phivolcs_earthquake_data")
 
 # looks for the latest file inside the bucket, extract the full path of the file inside the gcs bucket
@@ -28,7 +28,6 @@ spark = SparkSession.builder \
     .config('spark.jars.packages', 'com.google.cloud.spark:spark-bigquery-with-dependencies_2.12:0.35.0') \
     .config("spark.hadoop.fs.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem") \
     .config("spark.hadoop.google.cloud.auth.service.account.enable", "true") \
-    .config("spark.hadoop.google.cloud.auth.service.account.json.keyfile", "/home/joseph/Documents/dez_final_project/gsa/finalproject-456408-a18af71e91f6.json") \
     .getOrCreate() 
 
 # Create a spark dataframe

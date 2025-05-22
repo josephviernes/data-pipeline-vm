@@ -67,9 +67,9 @@ if soup:
 
 
 
-def upload_to_gcs(bucket_name, destination_blob_name, credentials_path):
+def upload_to_gcs(bucket_name, destination_blob_name):
     # Create a storage client
-    storage_client = storage.Client.from_service_account_json(credentials_path)
+    storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(destination_blob_name)
 
@@ -92,6 +92,5 @@ def upload_to_gcs(bucket_name, destination_blob_name, credentials_path):
 
 upload_to_gcs(
     bucket_name="phivolcs_earthquake_data",
-    destination_blob_name=f"dailies/{year}_{month}_{day}_{hour}_{minute}_earthquake_data.csv",
-    credentials_path="/home/joseph/Documents/dez_final_project/gsa/finalproject-456408-a18af71e91f6.json"
+    destination_blob_name=f"dailies/{year}_{month}_{day}_{hour}_{minute}_earthquake_data.csv"
 )
