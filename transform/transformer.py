@@ -121,7 +121,6 @@ df.write \
     .format("bigquery") \
     .mode("overwrite") \
     .option("table", "finalproject-456408.earthquake_dataset.temp_table") \
-    .option("temporaryGcsBucket", "your-temporary-bucket") \
     .option("temporaryGcsBucket", "phivolcs_earthquake_data") \
     .option("parentProject", "finalproject-456408") \
     .save()
