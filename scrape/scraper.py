@@ -9,6 +9,30 @@ import csv
 import io
 from google.cloud import storage
 
+def main():
+
+    # Disable SSL warnings (since we're ignoring SSL verification)
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+    # get the date, convert the month number to month name, get the current year, hour and minute
+    now = datetime.now()
+    month = now.strftime("%B")
+    year = now.year
+    day = now.day
+    hour = f"{now.hour:02d}"
+    minute = f"{now.minute:02d}"
+
+    # PHIVOLCS Earthquake URL
+    url = "https://earthquake.phivolcs.dost.gov.ph/" 
+    # f"https://earthquake.phivolcs.dost.gov.ph/EQLatest-Monthly/{year}/{year}_{month}.html"
+
+
+    upload_to_gcs(
+        earthquake_data=parse_data(fetch_data(url)),
+        bucket_name="phivolcs_earthquake_data",
+        destination_blob_name=f"dailies/{year}_{month}_{day}_{hour}_{minute}_earthquake_data.csv"         
+    )
+
 
 def fetch_data(url):
     try:
@@ -71,32 +95,6 @@ def upload_to_gcs(earthquake_data, bucket_name, destination_blob_name):
     # Upload the file to GCS
     blob.upload_from_string(csv_buffer.getvalue(), content_type='text/csv')
     print(f"List uploaded as CSV to gs://{bucket_name}/{destination_blob_name}")
-
-
-
-def main():
-
-    # Disable SSL warnings (since we're ignoring SSL verification)
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-    # get the date, convert the month number to month name, get the current year, hour and minute
-    now = datetime.now()
-    month = now.strftime("%B")
-    year = now.year
-    day = now.day
-    hour = f"{now.hour:02d}"
-    minute = f"{now.minute:02d}"
-
-    # PHIVOLCS Earthquake URL
-    url = "https://earthquake.phivolcs.dost.gov.ph/" 
-    # f"https://earthquake.phivolcs.dost.gov.ph/EQLatest-Monthly/{year}/{year}_{month}.html"
-
-
-    upload_to_gcs(
-        earthquake_data=parse_data(fetch_data(url)),
-        bucket_name="phivolcs_earthquake_data",
-        destination_blob_name=f"dailies/{year}_{month}_{day}_{hour}_{minute}_earthquake_data.csv"         
-    )
 
 
 if __name__ == "__main__":
