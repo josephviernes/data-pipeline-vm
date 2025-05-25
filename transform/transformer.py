@@ -7,52 +7,54 @@ from pyspark.sql.functions import regexp_replace, regexp_extract, col, when, to_
 
 
 def main():
-    bucket_name = "phivolcs_earthquake_data"
+    bucket = "phivolcs_earthquake_data"
     folder = "dailies/"
-    spark_session = create_spark_session()
-    file_name = latest_file(bucket_name, folder)
+    gcs_connector_path = "/home/joseph/Documents/dez_final_project/python scraper/jars/gcs-connector-hadoop3-latest.jar"
+    spark_session = create_spark_session(gcs_connector_path)
+    file_path = latest_file_path(bucket, folder)
 
-    df = read_gcs_file(spark_session, file_name)
+    df = read_gcs_file(spark_session, bucket, file_path)
 
     clean_df = transform(df)
 
     to_bq(clean_df)
 
 
-def latest_file(bucket_name, folder):
+def latest_file_path(bucket, folder):
     # FILTER THE GCS BUCKET FOLDER FOR THE LATEST EARTHQUAKE DATA FILE NAME
     # Initialize GCS client
     storage_client = storage.Client()
-    bucket = storage_client.bucket(bucket_name)
+    bucket = storage_client.bucket(bucket)
 
     # looks for the latest file inside the bucket, extract the full path of the file inside the gcs bucket
     blobs = list(bucket.list_blobs(prefix=folder))    # List blobs with the given prefix (acts like folder)
     files = [blob for blob in blobs if not blob.name.endswith('/')]    # Filter only "files" (exclude anything ending with '/')
     latest_blob = max(files, key=lambda b: b.updated, default=None)
-    file_name = latest_blob.name if latest_blob else NONE
+    file_path = latest_blob.name if latest_blob else NONE
 
-    return file_name
+    return file_path
 
 
-def create_spark_session():   
+def create_spark_session(gcs_connector_path):   
     # initiate a spark session, configure connection between spark and big query
     return SparkSession.builder \
         .master("local[*]") \
         .appName('Read From GCS Bucket') \
+        .config("spark.jars", gcs_connector_path) \
         .config('spark.jars.packages', 'com.google.cloud.spark:spark-bigquery-with-dependencies_2.12:0.35.0') \
         .config("spark.hadoop.fs.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem") \
         .config("spark.hadoop.google.cloud.auth.service.account.enable", "true") \
         .getOrCreate() 
 
 
-def read_gcs_file(spark_session, file_name):
+def read_gcs_file(spark_session, bucket, file_path_inside_bucket):
     # Create a spark dataframe
     # multiline=True negates the unneccesary creation of new line from /n every row
     return spark_session.read \
         .option("header", True) \
         .option("inferSchema", True) \
         .option("multiline", True) \
-        .csv(f"gs://phivolcs_earthquake_data/{file_name}")
+        .csv(f"gs://{bucket}/{file_path_inside_bucket}")
 
 
 def transform(df):
