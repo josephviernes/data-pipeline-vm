@@ -30,7 +30,7 @@ def latest_file_path(bucket, folder):
     blobs = list(bucket.list_blobs(prefix=folder))    # List blobs with the given prefix (acts like folder)
     files = [blob for blob in blobs if not blob.name.endswith('/')]    # Filter only "files" (exclude anything ending with '/')
     latest_blob = max(files, key=lambda b: b.updated, default=None)
-    file_path = latest_blob.name if latest_blob else NONE
+    file_path = latest_blob.name if latest_blob else None
 
     return file_path
 
