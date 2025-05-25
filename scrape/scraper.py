@@ -10,6 +10,8 @@ import io
 from google.cloud import storage
 
 def main():
+    bucket = "phivolcs_earthquake_data"
+    folder = "dailies"
 
     # Disable SSL warnings (since we're ignoring SSL verification)
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -29,8 +31,8 @@ def main():
 
     upload_to_gcs(
         earthquake_data=parse_data(fetch_data(url)),
-        bucket_name="phivolcs_earthquake_data",
-        destination_blob_name=f"dailies/{year}_{month}_{day}_{hour}_{minute}_earthquake_data.csv"         
+        bucket_name=bucket,
+        destination_blob_name=f"{folder}/{year}_{month}_{day}_{hour}_{minute}_earthquake_data.csv"         
     )
 
 
