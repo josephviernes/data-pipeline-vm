@@ -14,6 +14,6 @@ Required Libraries for ETL scripts:
 
 1. clone the repository
 2. set-up you google service account - admin, bq admin, gcs/bucket admin
-3. save the google credentials path to ~/.bashrc or (recommended) or assign service account to a compute resource
+3. save the google credentials path to ~/.bashrc or (recommended) assign service account to a compute resource
 4. docker build each of the ETL script images
-5. 
+5. generate your AIRFLOW__WEBSERVER__SECRET_KEY and AIRFLOW__CORE__FERNET_KEY then save it to the root folder as .env text file
