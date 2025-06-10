@@ -1,2 +1,2 @@
 google-cloud-storage
-pyspark
+pyspark==3.4.1

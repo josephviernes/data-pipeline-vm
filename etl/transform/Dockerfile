@@ -1,32 +1,28 @@
 # Use an official Python runtime as the base image
-FROM python:3.12.3
+FROM python:3.12.3-slim
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the requirements file to the working directory
-COPY requirements.txt .
+# Install Java 11 (Temurin) and curl
+RUN apt-get update && apt-get install -y wget gnupg curl && \
+    mkdir -p /etc/apt/keyrings && \
+    wget -O- https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor > /etc/apt/keyrings/adoptium.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb bookworm main" > /etc/apt/sources.list.d/adoptium.list && \
+    apt-get update && apt-get install -y temurin-11-jdk && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install dependencies needed for Spark (Java, curl, etc.)
-RUN apt-get update && apt-get install -y openjdk-11-jdk curl && rm -rf /var/lib/apt/lists/*
-
-# Set environment variables for Java
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+# Set Java environment variables
+ENV JAVA_HOME=/usr/lib/jvm/temurin-11-jdk-amd64
 ENV PATH=$JAVA_HOME/bin:$PATH
 
-# Download Spark dependencies
-RUN curl -L "https://downloads.apache.org/spark/spark-3.5.1/spark-3.5.1-bin-hadoop3.tgz" | \
-    tar -xz -C /opt && \
-    mv /opt/spark-3.5.1-bin-hadoop3 /opt/spark
+# Copy the requirements file to the working directory and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --default-timeout=100 --retries=5 -r requirements.txt
 
-# Install the Python libraries including pyspark
-RUN pip install -r requirements.txt
-
-# Pyspark environment variables
-
-ENV SPARK_HOME=/opt/spark
+# Set PySpark to use the right Python
 ENV PYSPARK_PYTHON=python3
-ENV PATH=${SPARK_HOME}/bin:$PATH
+ENV PYSPARK_DRIVER_PYTHON=python3
 
 # Copy the rest of the application code to the container
 COPY . .
@@ -35,4 +31,4 @@ COPY . .
 EXPOSE 5000
 
 # Define the command to run the app
-# CMD ["python", "transformer.py"]
+CMD ["python3", "processor.py"]

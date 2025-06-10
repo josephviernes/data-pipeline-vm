@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 5000
 
 # Define the command to run the app
-# CMD ["python", "merger.py"]
+CMD ["python3", "merger.py"]
