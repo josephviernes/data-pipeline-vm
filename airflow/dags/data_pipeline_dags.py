@@ -24,10 +24,10 @@ with DAG(
 
     t1 = DockerOperator(
         task_id="scraper",
-        image='earthquake_data_web_scraper:v3',
+        image='earthquake_data_web_scraper:v1.4',
         docker_url='unix://var/run/docker.sock',
         network_mode='bridge',
-        environment=google_creds,
+        environment={"GOOGLE_APPLICATION_CREDENTIALS": google_creds},
         auto_remove=True,
 
         
@@ -35,9 +35,9 @@ with DAG(
 
     t2 = DockerOperator(
         task_id="processor",
-        image='earthquake_data_processor:v3',
+        image='earthquake_data_processor:v1.6',
         docker_url='unix://var/run/docker.sock',
-        environment=google_creds,
+        environment={"GOOGLE_APPLICATION_CREDENTIALS": google_creds},
         network_mode='bridge',
         auto_remove=True,
 
@@ -47,10 +47,10 @@ with DAG(
 
     t3 = DockerOperator(
         task_id="merger",
-        image='earthquake_data_merger:v3',
+        image='earthquake_data_merger:v1.4',
         docker_url='unix://var/run/docker.sock',
         network_mode='bridge',
-        environment=google_creds,
+        environment={"GOOGLE_APPLICATION_CREDENTIALS": google_creds},
         auto_remove=True,  
         
     )
