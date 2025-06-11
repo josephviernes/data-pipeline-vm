@@ -25,6 +25,7 @@ Required Libraries for ETL scripts:
 4. docker build each of the ETL script images
 5. AIRFLOW SETUP:
     a. generate your AIRFLOW__WEBSERVER__SECRET_KEY and AIRFLOW__CORE__FERNET_KEY then save it to the airflow folder as .env text file, also add AIRFLOW_UID=1000
+    a.1 on your host machine, run "getent group docker" to determine docker group id then add it to your .env file as "AIRFLOW_GID=984" or whatever your Docker group ID is
     b. make this directories on the airflow folder: mkdir -p ./dags ./logs ./plugins ./config
     c. run this: docker compose up airflow-init
     d. Now you can trigger the airflow through "docker compose up"

@@ -2,6 +2,8 @@ x-airflow-common:
   &airflow-common
   image: apache/airflow:2.8.1
   env_file: .env
+  user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-0}"
+
   environment:
     &airflow-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
@@ -9,12 +11,7 @@ x-airflow-common:
     AIRFLOW__CELERY__BROKER_URL: redis://redis:6379/0
     AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
     AIRFLOW__CORE__LOAD_EXAMPLES: "false"
-  volumes:
-    - /var/run/docker.sock:/var/run/docker.sock # allows DockerOperator to manage containers
-    - ./dags:/opt/airflow/dags
-  depends_on:
-    - redis
-    - postgres
+
 
 services:
   postgres:
@@ -31,20 +28,32 @@ services:
 
   airflow-webserver:
     <<: *airflow-common
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./dags:/opt/airflow/dags
     command: webserver
     ports:
       - "8080:8080"
 
   airflow-scheduler:
     <<: *airflow-common
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./dags:/opt/airflow/dags
     command: scheduler
 
   airflow-worker:
     <<: *airflow-common
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./dags:/opt/airflow/dags
     command: celery worker
 
   airflow-init:
     <<: *airflow-common
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./dags:/opt/airflow/dags
     command: bash -c "airflow db migrate && airflow users create \
       --username admin --password admin --firstname Admin --lastname User \
       --role Admin --email admin@example.com"

@@ -17,8 +17,8 @@ with DAG(
     dag_id="earthquake_data_pipeline",
     tags=["earthquake_data_pipeline"],
     catchup=False,
-    schedule="0 6,18 * * *",
-    start_date=datetime(2025, 6, 15),
+    schedule=None,
+    start_date=datetime(2025, 6, 10),
 
 ) as dag:
 
@@ -28,6 +28,7 @@ with DAG(
         docker_url='unix://var/run/docker.sock',
         network_mode='bridge',
         environment={"GOOGLE_APPLICATION_CREDENTIALS": google_creds},
+        command='python3 scraper.py',
         auto_remove=True,
 
         
@@ -39,6 +40,7 @@ with DAG(
         docker_url='unix://var/run/docker.sock',
         environment={"GOOGLE_APPLICATION_CREDENTIALS": google_creds},
         network_mode='bridge',
+        command='python3 processor.py',
         auto_remove=True,
 
         
@@ -51,6 +53,7 @@ with DAG(
         docker_url='unix://var/run/docker.sock',
         network_mode='bridge',
         environment={"GOOGLE_APPLICATION_CREDENTIALS": google_creds},
+        command='python3 merger.py',
         auto_remove=True,  
         
     )
