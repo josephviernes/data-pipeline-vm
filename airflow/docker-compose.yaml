@@ -2,7 +2,6 @@ x-airflow-common:
   &airflow-common
   image: apache/airflow:2.8.1
   env_file: .env
-  user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-0}"
 
   environment:
     &airflow-env
