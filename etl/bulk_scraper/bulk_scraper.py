@@ -25,7 +25,7 @@ def main():
     minute = f"{now.minute:02d}"
 
     # PHIVOLCS Earthquake URL
-    years = ["2020"]#, "2021", "2022", "2023", "2024", "2025"]
+    years = ["2020", "2021", "2022", "2023", "2024", "2025"]
     months = ("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December") 
 
     earthquake_data_compiled = []
