@@ -23,7 +23,7 @@ with DAG(
 
     t1 = DockerOperator(
         task_id="bulk_scraper",
-        image='earthquake_data_bulk_web_scraper:v1.1',
+        image='earthquake_data_bulk_web_scraper:v1.0',
         docker_url='unix://var/run/docker.sock',
         network_mode='bridge',
         mounts=[
@@ -37,7 +37,7 @@ with DAG(
 
     t2 = DockerOperator(
         task_id="processor",
-        image='earthquake_data_processor:v1.6',
+        image='earthquake_data_processor:v2.0',
         docker_url='unix://var/run/docker.sock',
         network_mode='bridge',
         mounts=[
@@ -51,7 +51,7 @@ with DAG(
 
     t3 = DockerOperator(
         task_id="merger",
-        image='earthquake_data_merger:v1.4',
+        image='earthquake_data_merger:v2.0',
         docker_url='unix://var/run/docker.sock',
         network_mode='bridge',
         mounts=[
