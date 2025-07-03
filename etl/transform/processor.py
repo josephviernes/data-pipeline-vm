@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import os
 from pyspark.sql import SparkSession
 from google.cloud import storage
 from pyspark.sql.functions import regexp_replace, regexp_extract, col, when, to_timestamp
 
 
 def main():
-    bucket = "phivolcs_earthquake_data"
-    folder = "dailies/"
+    bucket = os.environ.get("bucket")
+    folder = os.environ.get("folder")
     gcs_connector_path = "/app/gcs-connector-hadoop3-latest.jar"
     spark_session = create_spark_session(gcs_connector_path)
     file_path = latest_file_path(bucket, folder)

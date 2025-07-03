@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import os
 from bs4 import BeautifulSoup as bs
 import requests
 import urllib3
@@ -10,8 +11,8 @@ import io
 from google.cloud import storage
 
 def main():
-    bucket = "phivolcs_earthquake_data"
-    folder = "dailies"
+    bucket = os.environ.get("bucket")
+    folder = os.environ.get("folder")
 
     # Disable SSL warnings (since we're ignoring SSL verification)
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
