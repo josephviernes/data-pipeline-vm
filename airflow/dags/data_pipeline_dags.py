@@ -30,7 +30,7 @@ with DAG(
             Mount(source="/var/run", target="/var/run", type="bind"),
             Mount(source=creds_host_folder_path, target="/gsa", type="bind", read_only=True)
         ],
-        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path},
+        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": "phivolcs_earthquake_data", "folder": "dailies"},
         command='python3 scraper.py',
         auto_remove=True,
     )
@@ -44,7 +44,7 @@ with DAG(
             Mount(source="/var/run", target="/var/run", type="bind"),
             Mount(source=creds_host_folder_path, target="/gsa", type="bind", read_only=True)
         ],
-        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path},
+        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": "phivolcs_earthquake_data", "folder": "dailies"},
         command='python3 processor.py',
         auto_remove=True,
     )
