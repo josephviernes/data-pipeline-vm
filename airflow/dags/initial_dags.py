@@ -39,7 +39,7 @@ with DAG(
             Mount(source=creds_host_folder_path, target="/gsa", type="bind", read_only=True)
         ],
         environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": bucket, "folder": folder},
-        command='python3 scraper.py',
+        command='python3 bulk_scraper.py',
         auto_remove=True,
     )
 
