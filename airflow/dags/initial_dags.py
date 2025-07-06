@@ -31,7 +31,7 @@ with DAG(
 
     t1 = DockerOperator(
         task_id="bulk_scraper",
-        image='earthquake_data_bulk_web_scraper:v1.0',
+        image='earthquake_bulk_data_web_scraper:v2.0',
         docker_url='unix://var/run/docker.sock',
         network_mode='bridge',
         mounts=[
