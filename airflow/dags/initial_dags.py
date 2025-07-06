@@ -1,10 +1,18 @@
+import os
 from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
 from datetime import datetime, timedelta
 from docker.types import Mount
 
-creds_container_path = "/gsa/finalproject-456408-a18af71e91f6.json"
-creds_host_folder_path = "/home/joseph/Documents/dez_final_project/gsa"
+
+#set-up your google credentials
+creds_container_path = "/gsa/my_creds.json"
+creds_host_folder_path = "/home/joseph/Documents/dez_final_project/earthquake_data_pipeline/terraform/keys"
+
+#set-up your google bucket and if neeeded, the folder inside the bucket
+bucket = "earthquake-etl-bucket"
+folder = "dailies"
+
 
 default_args = {
     'owner': 'jnv',
@@ -30,7 +38,7 @@ with DAG(
             Mount(source="/var/run", target="/var/run", type="bind"),
             Mount(source=creds_host_folder_path, target="/gsa", type="bind", read_only=True)
         ],
-        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": "phivolcs_earthquake_data", "folder": "dailies"},
+        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": bucket, "folder": folder},
         command='python3 scraper.py',
         auto_remove=True,
     )
@@ -44,7 +52,7 @@ with DAG(
             Mount(source="/var/run", target="/var/run", type="bind"),
             Mount(source=creds_host_folder_path, target="/gsa", type="bind", read_only=True)
         ],
-        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": "phivolcs_earthquake_data", "folder": "dailies"},
+        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": bucket, "folder": folder},
         command='python3 processor.py',
         auto_remove=True,
     )
