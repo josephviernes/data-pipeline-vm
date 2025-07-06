@@ -1,1 +1,10 @@
 .env
+*.json
+
+# Terraform build artifacts
+airflow/dags/__pycache__/initial_dags.cpython-38.pyc
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/wget-log
+terraform/.terraform.lock.hcl
+terraform/.terraform
