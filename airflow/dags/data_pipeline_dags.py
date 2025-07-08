@@ -8,9 +8,11 @@ from docker.types import Mount
 creds_container_path = "/gsa/my_creds.json"
 creds_host_folder_path = "/home/joseph/Documents/dez_final_project/earthquake_data_pipeline/terraform/keys"
 
-#set-up your google bucket and if neeeded, the folder inside the bucket
+#set-up your google storage bucket and if neeeded, the folder inside the bucket
 bucket = "earthquake-etl-bucket"
 folder = "dailies"
+project = "earthquake-etl"
+dataset = "earthquake_etl_dataset"
 
 
 default_args = {
@@ -37,7 +39,7 @@ with DAG(
             Mount(source="/var/run", target="/var/run", type="bind"),
             Mount(source=creds_host_folder_path, target="/gsa", type="bind", read_only=True)
         ],
-        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": bucket, "folder": folder},
+        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": bucket, "folder": folder, "project": project, "dataset": dataset},
         command='python3 scraper.py',
         auto_remove=True,
     )
@@ -51,7 +53,7 @@ with DAG(
             Mount(source="/var/run", target="/var/run", type="bind"),
             Mount(source=creds_host_folder_path, target="/gsa", type="bind", read_only=True)
         ],
-        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": bucket, "folder": folder},
+        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": bucket, "folder": folder, "project": project, "dataset": dataset},
         command='python3 processor.py',
         auto_remove=True,
     )
@@ -65,7 +67,7 @@ with DAG(
             Mount(source="/var/run", target="/var/run", type="bind"),
             Mount(source=creds_host_folder_path, target="/gsa", type="bind", read_only=True)
         ],
-        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path},
+        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": bucket, "folder": folder, "project": project, "dataset": dataset},
         command='python3 merger.py',
         auto_remove=True,
     )
