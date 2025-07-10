@@ -14,29 +14,37 @@ def main():
     bucket = os.environ.get("bucket")
     folder = os.environ.get("folder")
 
+    # PHIVOLCS Earthquake URL
+    years = ["2020", "2021", "2022", "2023", "2024", "2025"]
+    months = ("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December") 
+
     # Disable SSL warnings (since we're ignoring SSL verification)
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     # get the date, convert the month number to month name, get the current year, hour and minute
     now = datetime.now()
-    month = now.strftime("%B")
-    year = now.year
     day = now.day
     hour = f"{now.hour:02d}"
     minute = f"{now.minute:02d}"
 
-    # PHIVOLCS Earthquake URL
-    years = ["2020", "2021", "2022", "2023", "2024", "2025"]
-    months = ("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December") 
-
+    data_year = None
+    data_month = None
     earthquake_data_compiled = []
     for year in years:
         for month in months:
             url = f"https://earthquake.phivolcs.dost.gov.ph/EQLatest-Monthly/{year}/{year}_{month}.html"
 
-            earthquake_data_monthly = parse_data(fetch_data(url))
+            raw_data = fetch_data(url)
 
-            earthquake_data_compiled.extend(earthquake_data_monthly)
+            if raw_data is not None:           
+                earthquake_data_monthly = parse_data(raw_data)
+                earthquake_data_compiled.extend(earthquake_data_monthly)
+                data_year = year
+                data_month = month
+
+            else:
+                continue
+        
 
             print(f"adding {month}-{year} data to the list...")
 
@@ -44,7 +52,7 @@ def main():
     upload_to_gcs(
             earthquake_data=earthquake_data_compiled,
             bucket_name=bucket,
-            destination_blob_name=f"{folder}/{year}_{month}_{day}_{hour}_{minute}_earthquake_data.csv"         
+            destination_blob_name=f"{folder}/{data_year}_{data_month}_{day}_{hour}_{minute}_earthquake_data.csv"         
         )
 
 
@@ -58,8 +66,8 @@ def fetch_data(url):
     except requests.exceptions.RequestException as e:
         print(f"Error fetching data: {e}")
 
-def parse_data(soup):
 
+def parse_data(soup):
     # This will create a list that will store the extracted data
     earthquake_data = []
 
