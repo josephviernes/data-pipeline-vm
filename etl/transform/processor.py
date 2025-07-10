@@ -8,6 +8,8 @@ from pyspark.sql.functions import regexp_replace, regexp_extract, col, when, to_
 
 
 def main():
+    project = os.environ.get("project")
+    dataset = os.environ.get("dataset")
     bucket = os.environ.get("bucket")
     folder = os.environ.get("folder")
     gcs_connector_path = "/app/gcs-connector-hadoop3-latest.jar"
@@ -18,7 +20,7 @@ def main():
 
     clean_df = transform(df)
 
-    to_bq(clean_df)
+    to_bq(clean_df, project, dataset, bucket)
 
 
 def latest_file_path(bucket, folder):
@@ -120,16 +122,16 @@ def transform(df):
         regexp_replace(df["province"], "Municipality Of Sarangani", "Davao Occidental"))
     return df
 
-def to_bq(df):
+def to_bq(df, project, dataset, bucket):
     # EXPORTING TO BIG QUERY
     # save the dataframe as a table in big query, it uses a bucket to stage the file before creating the "temp_table" in big query
     # this also create or replace existing temp_table
     df.write \
         .format("bigquery") \
         .mode("overwrite") \
-        .option("table", "finalproject-456408.earthquake_dataset.temp_table") \
-        .option("temporaryGcsBucket", "phivolcs_earthquake_data") \
-        .option("parentProject", "finalproject-456408") \
+        .option("table", f"{project}.{dataset}.temp_table") \
+        .option("temporaryGcsBucket", bucket) \
+        .option("parentProject", project) \
         .save()
 
 
