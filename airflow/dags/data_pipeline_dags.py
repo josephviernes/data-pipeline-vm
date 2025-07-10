@@ -1,3 +1,4 @@
+import os
 from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
 from datetime import datetime, timedelta
@@ -17,8 +18,8 @@ dataset = "earthquake_etl_dataset"
 
 default_args = {
     'owner': 'jnv',
-    'retries': 2,
-    'retry_delay': timedelta(minutes=5),
+    'retries': 1,
+    'retry_delay': timedelta(minutes=2),
 }
 
 with DAG(
@@ -26,7 +27,7 @@ with DAG(
     dag_id="earthquake_data_pipeline",
     tags=["earthquake_data_pipeline"],
     catchup=False,
-    schedule=None,
+    schedule="0 8 * * *",
     start_date=datetime(2025, 6, 10),
 ) as dag:
 
