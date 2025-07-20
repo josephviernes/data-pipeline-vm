@@ -6,8 +6,8 @@ from docker.types import Mount
 
 
 #set-up your google credentials
-creds_container_path = "/gsa/my_creds.json"
-creds_host_folder_path = "/home/joseph/Documents/dez_final_project/earthquake_data_pipeline/terraform/keys"
+creds_container_path = "/gsa/my-creds.json"
+creds_host_folder_path = "/home/jnv/earthquake-data-pipeline/keys"
 
 #set-up your google bucket and if neeeded, the folder inside the bucket
 bucket = "earthquake-etl-bucket"
