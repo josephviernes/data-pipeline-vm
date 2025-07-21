@@ -22,12 +22,13 @@ default_args = {
     'retry_delay': timedelta(minutes=2),
 }
 
+
 with DAG(
     default_args=default_args,
     dag_id="earthquake_data_pipeline",
-    tags=["earthquake_data_pipeline"],
+    tags=["earthquake"],
     catchup=False,
-    schedule="0 8 * * *",
+    schedule=None,
     start_date=datetime(2025, 6, 10),
 ) as dag:
 
