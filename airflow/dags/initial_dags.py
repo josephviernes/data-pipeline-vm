@@ -15,6 +15,10 @@ folder = "dailies"
 project = "earthquake-etl"
 dataset = "earthquake_etl_dataset"
 
+# set the date range of your initial data. Months with no data will be skipped.
+years = ["2020", "2021", "2022", "2023", "2024", "2025"]
+months = ("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December") 
+
 
 default_args = {
     'owner': 'jnv',
@@ -40,7 +44,7 @@ with DAG(
             Mount(source="/var/run", target="/var/run", type="bind"),
             Mount(source=creds_host_folder_path, target="/gsa", type="bind", read_only=True)
         ],
-        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": bucket, "folder": folder, "project": project, "dataset": dataset},
+        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": bucket, "folder": folder, "project": project, "dataset": dataset, "years": years, "months": months},
         command='python3 bulk_scraper.py',
         auto_remove=True,
     )
@@ -54,7 +58,7 @@ with DAG(
             Mount(source="/var/run", target="/var/run", type="bind"),
             Mount(source=creds_host_folder_path, target="/gsa", type="bind", read_only=True)
         ],
-        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": bucket, "folder": folder, "project": project, "dataset": dataset},
+        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": bucket, "folder": folder, "project": project, "dataset": dataset, "years": years, "months": months},
         command='python3 processor.py',
         auto_remove=True,
     )
@@ -68,7 +72,7 @@ with DAG(
             Mount(source="/var/run", target="/var/run", type="bind"),
             Mount(source=creds_host_folder_path, target="/gsa", type="bind", read_only=True)
         ],
-        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": bucket, "folder": folder, "project": project, "dataset": dataset},
+        environment={"GOOGLE_APPLICATION_CREDENTIALS": creds_container_path, "bucket": bucket, "folder": folder, "project": project, "dataset": dataset, "years": years, "months": months},
         command='python3 merger.py',
         auto_remove=True,
     )
