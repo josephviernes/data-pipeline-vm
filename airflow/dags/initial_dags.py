@@ -29,7 +29,7 @@ default_args = {
 with DAG(
     default_args=default_args,
     dag_id="initial_dags",
-    tags=["earthquake_data_pipeline"],
+    tags=["earthquake"],
     catchup=False,
     schedule=None,
     start_date=datetime(2025, 6, 10),
