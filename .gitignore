@@ -8,3 +8,4 @@ terraform/terraform.tfstate.backup
 terraform/wget-log
 terraform/.terraform.lock.hcl
 terraform/.terraform
+airflow/dags/__pycache__/data_pipeline_dags.cpython-38.pyc
