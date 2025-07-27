@@ -31,7 +31,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./dags:/opt/airflow/dags
-    user: "0:0"
     command: webserver
     ports:
       - "8080:8080"
@@ -41,7 +40,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./dags:/opt/airflow/dags
-    user: "0:0"
     command: scheduler
 
   airflow-worker:
@@ -49,7 +47,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./dags:/opt/airflow/dags
-    user: "0:0"
     command: celery worker
 
   airflow-init:
