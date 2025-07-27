@@ -61,5 +61,14 @@ services:
       --username admin --password admin --firstname Admin --lastname User \
       --role Admin --email admin@example.com"
 
+  airflow-cli:
+    <<: *airflow-common
+    entrypoint: ""
+    command: bash
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./dags:/opt/airflow/dags
+    tty: true 
+
 volumes:
   postgres-db-volume:
