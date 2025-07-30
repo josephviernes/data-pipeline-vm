@@ -43,11 +43,12 @@ services:
     command: scheduler
 
   airflow-worker:
-    <<: *airflow-common
+    image: asia-southeast1-docker.pkg.dev/earthquake-etl/etl-docker-repo/airflow_custom_worker:v1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./dags:/opt/airflow/dags
     command: celery worker
+
 
   airflow-init:
     <<: *airflow-common
