@@ -28,7 +28,7 @@ with DAG(
     dag_id="earthquake_data_pipeline",
     tags=["earthquake"],
     catchup=False,
-    schedule=None,
+    schedule_interval=None,
     start_date=datetime(2025, 6, 10),
 ) as dag:
 
