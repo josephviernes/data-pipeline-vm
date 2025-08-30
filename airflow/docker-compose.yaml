@@ -43,7 +43,11 @@ services:
     command: scheduler
 
   airflow-worker:
+    <<: *airflow-common
     image: asia-southeast1-docker.pkg.dev/earthquake-etl/etl-docker-repo/airflow_custom_worker:v1
+    user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-0}"
+    group_add:
+      - 986
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./dags:/opt/airflow/dags
