@@ -46,7 +46,7 @@ services:
     <<: *airflow-common
     image: asia-southeast1-docker.pkg.dev/earthquake-etl/etl-docker-repo/airflow_custom_worker:v1
     group_add:
-      - 986
+      - 987
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./dags:/opt/airflow/dags
