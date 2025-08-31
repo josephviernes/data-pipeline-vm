@@ -7,7 +7,7 @@ from docker.types import Mount
 
 #set-up your google credentials
 creds_container_path = "/gsa/my_creds.json"
-creds_host_folder_path = "/home/jnv/earthquake-data-pipeline/keys"
+creds_host_folder_path = "/home/jnv/data-pipeline-vm/keys"
 
 #set-up your google storage bucket and if neeeded, the folder inside the bucket
 bucket = "earthquake-etl-bucket"
