@@ -27,12 +27,12 @@ default_args = {
 }
 
 with DAG(
+    dag_id="initial_dags",    
     default_args=default_args,
-    dag_id="initial_dags",
     tags=["earthquake"],
     catchup=False,
     schedule=None,
-    start_date=datetime(2025, 6, 10),
+    start_date=datetime(2025, 9, 12),
 ) as dag:
 
     t1 = DockerOperator(

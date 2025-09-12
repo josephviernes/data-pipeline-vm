@@ -24,12 +24,12 @@ default_args = {
 
 
 with DAG(
-    default_args=default_args,
     dag_id="earthquake_data_pipeline",
+    default_args=default_args,
     tags=["earthquake"],
     catchup=False,
-    schedule_interval=None,
-    start_date=datetime(2025, 6, 10),
+    schedule_interval="@daily",
+    start_date=datetime(2025, 9, 12),
 ) as dag:
 
     t1 = DockerOperator(
