@@ -50,7 +50,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./dags:/opt/airflow/dags
-    command: celery worker
+    command: celery worker --queues default,docker_queue
 
 
   airflow-init:
@@ -58,18 +58,35 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./dags:/opt/airflow/dags
-    command: bash -c "airflow db migrate && airflow users create \
-      --username admin --password admin --firstname Admin --lastname User \
-      --role Admin --email admin@example.com"
+    command: bash -c "
+      airflow db upgrade &&
+      airflow users create \
+        --username admin \
+        --password admin \
+        --firstname Admin \
+        --lastname User \
+        --role Admin \
+        --email admin@example.com
+      "
+    restart: "no"
+    depends_on:
+      - postgres
+      - redis
+
 
   airflow-cli:
     <<: *airflow-common
-    entrypoint: ""
     command: bash
+    depends_on:
+      - postgres
+      - redis
+      - airflow-scheduler
+      - airflow-webserver
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./dags:/opt/airflow/dags
-    tty: true 
+    tty: true
+
 
 volumes:
   postgres-db-volume:
