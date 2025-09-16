@@ -7,7 +7,7 @@ from docker.types import Mount
 
 #set-up your google credentials
 creds_container_path = "/gsa/my_creds.json"
-creds_host_folder_path = "/home/jnv/Documents/project/earthquake-data-pipeline/keys"
+creds_host_folder_path = "/home/jnv/data-pipeline-vm/keys"
 
 #set-up your google bucket and if neeeded, the folder inside the bucket
 bucket = "earthquake-etl-bucket"
@@ -16,7 +16,7 @@ project = "earthquake-etl"
 dataset = "earthquake_etl_dataset"
 
 # set the date range of your initial data. Months with no data will be catched by the exception and will be skipped.
-years = ["2020", "2021","2022","2023","2024","2025"]
+years = ["2020", "2021", "2022", "2023", "2024", "2025"]
 months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] 
 
 
