@@ -15,8 +15,8 @@ def main():
     folder = os.environ.get("folder")
 
     # PHIVOLCS Earthquake URL
-    years = os.environ.get("years")
-    months = os.environ.get("months")
+    years = os.getenv("years").split(",")
+    months = os.getenv("months").split(",")
 
     # Disable SSL warnings (since we're ignoring SSL verification)
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
